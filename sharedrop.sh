@@ -73,5 +73,5 @@ inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
 
   cp "$INBOX/$infile" "$OUTBOX/$outfile"
   debug "$infile -> $outfile"
-  notify-send "$BASE_URL/$outfile"
+  notify-send --icon network_fs ShareDrop "$BASE_URL/$outfile"
 done
