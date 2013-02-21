@@ -45,7 +45,7 @@ if [ "x$REMOTE" = "$x" ]; then
 fi
 
 if [ "x$BASE_URL" = "$x" ]; then
-  error "No base urldefined. Define BASE_URL=<...> in $CONFIG_FILE"
+  error "No base url defined. Define BASE_URL=<...> in $CONFIG_FILE"
 fi
 
 # Start
