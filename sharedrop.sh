@@ -6,8 +6,15 @@ debug () {
   fi
 }
 
+notify () {
+  notify-send --icon network_fs ShareDrop "$@"
+}
+
 error () {
-  echo "Error: $@" >&2
+  message="Error: $@"
+  echo "$message" >&2
+  notify "$message"
+
   exit 1
 }
 
@@ -20,20 +27,8 @@ for bin in $REQUIREMENTS; do
   )
 done
 
-DATA_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/sharedrop
 CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/sharedrop
-OUTBOX="$DATA_DIR/outbox"
 CONFIG_FILE="$CONFIG_DIR/config.sh"
-
-if [ ! -d "$DATA_DIR" ]; then
-  debug "Creating $DATA_DIR"
-  mkdir -p "$DATA_DIR"
-fi
-
-if [ ! -d "$OUTBOX" ]; then
-  debug "Creating $OUTBOX"
-  mkdir -p "$OUTBOX"
-fi
 
 source "$CONFIG_FILE" 2>/dev/null
 if [ "$?" -ne 0 ]; then
@@ -42,23 +37,18 @@ fi
 
 if [ "x$REMOTE" = "$x" ]; then
   error "No remote defined. Define REMOTE=<...> in $CONFIG_FILE"
+else
+  REMOTE="${REMOTE%/}"
 fi
 
 if [ "x$BASE_URL" = "$x" ]; then
   error "No base url defined. Define BASE_URL=<...> in $CONFIG_FILE"
+else
+  BASE_URL="${BASE_URL%/}"
 fi
 
 # Start
 INBOX="${1:-`pwd`}"
-
-debug "Mounting $REMOTE to $OUTBOX"
-sshfs "$REMOTE" "$OUTBOX"
-
-teardown () {
-  fusermount -u "$OUTBOX"
-}
-
-trap teardown INT
 
 inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
   ext="${infile##*.}"
@@ -71,7 +61,7 @@ inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
     outfile="$hash"
   fi
 
-  cp "$INBOX/$infile" "$OUTBOX/$outfile"
-  debug "$infile -> $outfile"
-  notify-send --icon network_fs ShareDrop "$BASE_URL/$outfile"
+  scp "$INBOX/$infile" "$REMOTE/$outfile"
+  debug "$infile -> $REMOTE/$outfile"
+  notify "$BASE_URL/$outfile"
 done
