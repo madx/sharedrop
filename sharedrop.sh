@@ -85,7 +85,7 @@ else
 fi
 
 # Start
-INBOX="${1:-`pwd`}"
+INBOX="$(realpath ${1:-`pwd`})"
 sync
 
 inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
