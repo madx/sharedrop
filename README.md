@@ -5,8 +5,8 @@ ShareDrop is a system that eases file sharing on Linux, provided you've got
 your own server to store the files.
 
 It works by monitoring a folder for file creation or modification and by
-automatically and securely copying these files to your web server through
-`scp`.
+automatically and securely synchronizing these files to your web server through
+`rsync`.
 
 
 Requirements
@@ -14,6 +14,7 @@ Requirements
 
 * bash (tested with 4.2.42)
 * ssh (tested with OpenSSH 6.1)
+* rsync (tested with 3.0.9)
 * sha1sum (tested with the version from GNU coreutils 8.21)
 * inotify-tools (tested with 3.14)
 * notify-send (tested with the version from libnotify 0.7.5)
@@ -45,7 +46,7 @@ ShareDrop is configured through a `config.sh` file in a standard configuration
 folder (if you haven't tweaked `$XDG_CONFIG_HOME` then it's likely to be in
 `$HOME/.config/sharedrop/`). This file must define two bash variables:
 
-  * `$REMOTE`: an `scp` remote folder specification (such as
+  * `$REMOTE`: an `rsync` remote folder specification (such as
     `example.com:public_html/`)
   * `$BASE_URL`: the URL for the VirtualHost you configured in your web server
     (e.g.: `http://example.com/share/`)
