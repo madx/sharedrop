@@ -72,13 +72,13 @@ if [ "$?" -ne 0 ]; then
   error "No config file found, create one at $CONFIG_FILE"
 fi
 
-if [ "x$REMOTE" = "x" ]; then
+if [ -z "$REMOTE" ]; then
   error "No remote defined. Define REMOTE=<...> in $CONFIG_FILE"
 else
   REMOTE="${REMOTE%/}"
 fi
 
-if [ "x$BASE_URL" = "x" ]; then
+if [ -z "$BASE_URL" ]; then
   error "No base url defined. Define BASE_URL=<...> in $CONFIG_FILE"
 else
   BASE_URL="${BASE_URL%/}"
