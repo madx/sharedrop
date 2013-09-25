@@ -98,7 +98,7 @@ inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
     outfile="$hash"
   fi
 
-  ln -s "$INBOX/$infile" "$DATA_DIR/files/$outfile"
+  ln -sf "$INBOX/$infile" "$DATA_DIR/files/$outfile"
   log "$infile -> $REMOTE/$outfile"
   sync
   notify "$BASE_URL/$outfile"
