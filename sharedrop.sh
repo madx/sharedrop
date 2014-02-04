@@ -67,7 +67,7 @@ sync () {
   log "Syncing"
   build_index
 
-  rsync -e ssh -Lavz --chmod=ug=rX,o=rX --delete-after "$DATA_DIR/files/" "$REMOTE" 2>&1 |
+  rsync -e ssh -Lavz --chmod=u=rwX,g=rX,o=rX --delete-after "$DATA_DIR/files/" "$REMOTE" 2>&1 |
     while read line; do
       log "rsync: $line"
     done
