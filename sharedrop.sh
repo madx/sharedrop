@@ -2,7 +2,7 @@
 
 CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/sharedrop
 DATA_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/sharedrop
-LOGFILE=${LOGFILE:-$HOME/}
+LOGFILE=${LOGFILE:-$HOME/sharedrop.log}
 CONFIG_FILE="$CONFIG_DIR/config.sh"
 INDEX_FILE_NAME="list.html"
 
@@ -67,7 +67,7 @@ sync () {
   log "Syncing"
   build_index
 
-  rsync -e ssh -Lavz --chmod=ug=rX,o=rX --delete-after "$DATA_DIR/files/" "$REMOTE" 2>&1 |
+  rsync -e ssh -Lavz --chmod=u=rwX,g=rX,o=rX --delete-after "$DATA_DIR/files/" "$REMOTE" 2>&1 |
     while read line; do
       log "rsync: $line"
     done
@@ -79,8 +79,10 @@ make_hash () {
   sha1sum "$file" | cut -d' ' -f1 | ruby -ne 'puts $_.to_i(16).to_s(36)'
 }
 
+[ "$LOGFILE" = "-" ] && LOGFILE=/dev/stdout
+
 # Redirect all output to the log
-exec 2>&1 >>"$DATA_DIR/sharedrop.log"
+exec 2>&1 >>"$LOGFILE"
 
 trap die INT
 trap sync USR1
@@ -124,7 +126,8 @@ else
 fi
 
 # Start
-INBOX="$(realpath ${1:-`pwd`})"
+: ${INBOX:="$(realpath ${1:-`pwd`})"}
+log "Inbox: $INBOX"
 sync
 
 inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
@@ -140,5 +143,5 @@ inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
   ln -sf "$INBOX/$infile" "$DATA_DIR/files/$outfile"
   log "$infile -> $REMOTE/$outfile"
   sync
-  notify "$BASE_URL/$outfile"
+  notify "<a href=\"$BASE_URL/$outfile\">$BASE_URL/$outfile</a>"
 done
