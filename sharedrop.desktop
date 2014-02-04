@@ -1,0 +1,8 @@
+[Desktop Entry]
+Categories=Network;
+Encoding=UTF-8
+Exec=env LOGFILE=- INBOX=$HOME/dev/sharedrop/drop $HOME/dev/sharedrop/sharedrop.sh
+Name=ShareDrop
+Terminal=false
+Type=Application
+Version=1.0
