@@ -2,7 +2,7 @@
 
 CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/sharedrop
 DATA_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/sharedrop
-LOGFILE=${LOGFILE:-$HOME/}
+LOGFILE=${LOGFILE:-$HOME/sharedrop.log}
 CONFIG_FILE="$CONFIG_DIR/config.sh"
 INDEX_FILE_NAME="list.html"
 
@@ -79,8 +79,10 @@ make_hash () {
   sha1sum "$file" | cut -d' ' -f1 | ruby -ne 'puts $_.to_i(16).to_s(36)'
 }
 
+[ "$LOGFILE" = "-" ] && LOGFILE=/dev/stdout
+
 # Redirect all output to the log
-exec 2>&1 >>"$DATA_DIR/sharedrop.log"
+exec 2>&1 >>"$LOGFILE"
 
 trap die INT
 trap sync USR1
