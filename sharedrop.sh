@@ -142,5 +142,5 @@ inotifywait -qm "$INBOX" -e CLOSE_WRITE --format "%f" | while read infile; do
   ln -sf "$INBOX/$infile" "$DATA_DIR/files/$outfile"
   log "$infile -> $REMOTE/$outfile"
   sync
-  notify "$BASE_URL/$outfile"
+  notify "<a href=\"$BASE_URL/$outfile\">$BASE_URL/$outfile</a>"
 done
