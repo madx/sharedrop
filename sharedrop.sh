@@ -5,6 +5,7 @@ DATA_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/sharedrop
 LOGFILE=${LOGFILE:-$HOME/}
 CONFIG_FILE="$CONFIG_DIR/config.sh"
 INDEX_FILE_NAME="list.html"
+NOTIFIER=${NOTIFIER:-"notify-send --icon network_fs ShareDrop"}
 
 log() {
   echo "`date +%FT%T` $@"
@@ -16,7 +17,7 @@ die () {
 }
 
 notify () {
-  notify-send --icon network_fs ShareDrop "$@"
+  $NOTIFIER "$@"
 }
 
 error () {
