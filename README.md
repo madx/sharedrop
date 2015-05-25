@@ -1,5 +1,5 @@
-ShareDrop
-=========
+# ShareDrop
+
 
 ShareDrop is a system that eases file sharing on Linux, provided you've got
 your own server to store the files.
@@ -9,19 +9,33 @@ automatically and securely synchronizing these files to your web server through
 `rsync`.
 
 
-Requirements
-------------
+## Requirements
 
 * bash (tested with 4.2.42)
+* sha1sum (tested with the version from GNU coreutils 8.21)
+* fswatch
+* convert
+* a web server
+
+Also depending on the sync_command
+
 * ssh (tested with OpenSSH 6.1)
 * rsync (tested with 3.0.9)
-* sha1sum (tested with the version from GNU coreutils 8.21)
-* inotify-tools (tested with 3.14)
-* notify-send (tested with the version from libnotify 0.7.5)
-* A web server
 
-Setup
------
+## Linux
+
+* notify-send (tested with the version from libnotify 0.7.5)
+
+## OSX
+
+* terminal-notifier (optional)
+
+```console
+$ brew install fswatch
+$ brew install imagemagick
+```
+
+## Setup
 
 ShareDrop needs some (quite easy) setup.
 
@@ -32,15 +46,13 @@ ShareDrop needs some (quite easy) setup.
 4. Drop files in the folder you launched ShareDrop in
 5. Wait for the notification giving you an URL for your file
 
-Persistent setup
-----------------
+## Persistent setup
 
 You may also want to automatically run ShareDrop on session start. You can give
 a path to ShareDrop to monitor as the first argument of the command. This should
 ease setting up your session manager.
 
-Configuration
--------------
+## Configuration
 
 ShareDrop is configured through a `config.sh` file in a standard configuration
 folder (if you haven't tweaked `$XDG_CONFIG_HOME` then it's likely to be in
