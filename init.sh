@@ -118,7 +118,7 @@ sync_command () {
 make_hash () {
   local file="$1"
 
-  HASH_CMD "$file" | cut -d' ' -f1 | ruby -ne 'puts $_.to_i(16).to_s(36)'
+  $HASH_CMD "$file" | cut -d' ' -f1 | ruby -ne 'puts $_.to_i(16).to_s(36)'
 }
 
 # Redirect all output to the log
