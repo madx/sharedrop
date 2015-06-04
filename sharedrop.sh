@@ -33,9 +33,9 @@ fi
 
 # Start
 if [[ $OS == "osx" ]]; then
-  INBOX="${1:-`pwd`}"
+  INBOX="${1:-$(pwd)}"
 else
-  INBOX="$(realpath ${1:-`pwd`})"
+  INBOX="$(realpath "${1:-$(pwd)}")"
 fi
 sync
 

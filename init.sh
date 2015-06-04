@@ -30,19 +30,19 @@ notify_osx () {
       -appIcon "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/iDiskGenericIcon.icns" \
       -title "ShareDrop" \
       -message "$1" \
-      -open $2 \
+      -open "$2" \
       &> /dev/null
   # audio fallback :)
   elif type say > /dev/null; then
     say "ShareDrop message: $1"
   else
-    echo $1
+    echo "$1"
   fi
 }
 
 
 log () {
-  echo "`date +%FT%T` $@"
+  echo "[$(date +%FT%T)]" "$@"
 }
 
 die () {
@@ -60,7 +60,7 @@ log_and_notify () {
 }
 
 error () {
-  log_and_notify "Error: $@"
+  log_and_notify "Error: " "$@"
 
   die
 }
@@ -70,7 +70,7 @@ build_index () {
 
   echo -n > "$INDEX_FILE"
 
-  ls -t1 "$DATA_DIR/files" | egrep -v "$INDEX_FILE_NAME|thumbs" | while read file; do
+  find "$DATA_DIR/files" -mindepth 1 -printf "%f\n" |  egrep -v "$INDEX_FILE_NAME|thumbs" | while read file; do
     ext="${file##*.}"
 
     case "$ext" in
@@ -122,13 +122,14 @@ make_hash () {
 }
 
 # Redirect all output to the log
-exec 2>&1 >>"$DATA_DIR/sharedrop.log"
+exec >>"$DATA_DIR/sharedrop.log" 2>&1
 
 trap die INT
 trap sync USR1
 
 # Check requirements
-if [[ $OS == "osx" ]]; then
+if [[ $OS == "osx" ]]
+then
   REQUIREMENTS=""
 else
   REQUIREMENTS="notify-send"
@@ -136,7 +137,7 @@ fi
 REQUIREMENTS="fswatch convert $REQUIREMENTS $HASH_CMD $METHOD"
 
 for bin in $REQUIREMENTS; do
-  type $bin >/dev/null 2>&1 || (
+  type "$bin" >/dev/null 2>&1 || (
     error "Missing executable: $bin"
     die
   )
