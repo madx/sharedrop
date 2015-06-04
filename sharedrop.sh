@@ -14,7 +14,7 @@ if [ ! -d $DATA_DIR ]; then
   mkdir -p $DATA_DIR/files/thumbs # Also automatically create the files and thumbs folder
 fi
 
-if [ "$?" -ne 0 ]; then
+if [ ! -f "$CONFIG_FILE" ]; then
   error "No config file found, create one at $CONFIG_FILE"
 fi
 
