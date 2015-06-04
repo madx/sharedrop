@@ -1,8 +1,7 @@
 #!/bin/bash
 
 OS=unix
-if [[ $(uname) = "Darwin" ]]
-then
+if [[ $(uname) = "Darwin" ]]; then
   OS=osx
 fi
 
@@ -16,18 +15,16 @@ METHOD=${METHOD:-rsync}
 mkdir -p $CONFIG_DIR
 mkdir -p $DATA_DIR
 
-if [[ $OS == "osx" ]]
-then
-  NOTIFIER=${NOTIFIER:-"osxNotify"}
+if [[ $OS == "osx" ]]; then
+  NOTIFIER=${NOTIFIER:-"notify_osx"}
   HASH_CMD=shasum
 else
   NOTIFIER=${NOTIFIER:-"notify-send --icon network_fs ShareDrop"}
   HASH_CMD=sha1sum
 fi
 
-osxNotify () {
-  if type terminal-notifier > /dev/null
-  then
+notify_osx () {
+  if type terminal-notifier > /dev/null; then
     terminal-notifier \
       -sound Pop \
       -appIcon "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/iDiskGenericIcon.icns" \
@@ -36,11 +33,9 @@ osxNotify () {
       -open $2 \
       &> /dev/null
   # audio fallback :)
+  elif type say > /dev/null; then
+    say "ShareDrop message: $1"
   else
-    if type say > /dev/null
-    then
-      say "ShareDrop message: $1"
-    fi
     echo $1
   fi
 }
@@ -59,13 +54,13 @@ notify () {
   $NOTIFIER "$@"
 }
 
-logAndNotify () {
+log_and_notify () {
   log "$@"
   notify "$@"
 }
 
 error () {
-  logAndNotify "Error: $@"
+  log_and_notify "Error: $@"
 
   die
 }
@@ -123,7 +118,7 @@ sync_command () {
 make_hash () {
   local file="$1"
 
-  $HASH_CMD "$file" | cut -d' ' -f1 | ruby -ne 'puts $_.to_i(16).to_s(36)'
+  HASH_CMD "$file" | cut -d' ' -f1 | ruby -ne 'puts $_.to_i(16).to_s(36)'
 }
 
 # Redirect all output to the log
@@ -133,8 +128,7 @@ trap die INT
 trap sync USR1
 
 # Check requirements
-if [[ $OS == "osx" ]]
-then
+if [[ $OS == "osx" ]]; then
   REQUIREMENTS=""
 else
   REQUIREMENTS="notify-send"

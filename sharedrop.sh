@@ -2,41 +2,36 @@
 
 source ./init.sh
 
-logAndNotify "Starting Sharedrop ($CONFIG_DIR, $DATA_DIR)"
+log_and_notify "Starting Sharedrop ($CONFIG_DIR, $DATA_DIR)"
 
-if [ ! -d $CONFIG_DIR ]
-then
+if [ ! -d $CONFIG_DIR ]; then
   log "Creating config dir ($CONFIG_DIR)"
   mkdir -p $CONFIG_DIR
 fi
-if [ ! -d $DATA_DIR ]
-then
+
+if [ ! -d $DATA_DIR ]; then
   log "Creating data dir ($DATA_DIR)"
   mkdir -p $DATA_DIR/files/thumbs # Also automatically create the files and thumbs folder
 fi
 
-if [ "$?" -ne 0 ]
-then
+if [ "$?" -ne 0 ]; then
   error "No config file found, create one at $CONFIG_FILE"
 fi
 
-if [ -z "$REMOTE" ]
-then
+if [ -z "$REMOTE" ]; then
   error "No remote defined. Define REMOTE=<...> in $CONFIG_FILE"
 else
   REMOTE="${REMOTE%/}"
 fi
 
-if [ -z "$BASE_URL" ]
-then
+if [ -z "$BASE_URL" ]; then
   error "No base url defined. Define BASE_URL=<...> in $CONFIG_FILE"
 else
   BASE_URL="${BASE_URL%/}"
 fi
 
 # Start
-if [[ $OS == "osx" ]]
-then
+if [[ $OS == "osx" ]]; then
   INBOX="${1:-`pwd`}"
 else
   INBOX="$(realpath ${1:-`pwd`})"
@@ -45,15 +40,12 @@ sync
 
 log "Watching $INBOX"
 
-fswatch -0 $INBOX | while read -d "" infile
-do
-  if [ -f "$infile" ]
-  then
+fswatch -0 $INBOX | while read -d "" infile; do
+  if [ -f "$infile" ]; then
     ext="${infile##*.}"
     hash=$(make_hash "$infile")
 
-    if echo "$infile" | grep -q "." >/dev/null
-    then
+    if echo "$infile" | grep -q "." >/dev/null; then
       outfile="$hash.$ext"
     else
       outfile="$hash"
@@ -67,8 +59,7 @@ do
     notify "$BASE_URL/$outfile" "$BASE_URL/$outfile"
 
     # paste in clipboard
-    if [[ $OS == "osx" ]]
-    then
+    if [[ $OS == "osx" ]]; then
       echo "$BASE_URL/$outfile" | pbcopy
     fi
   fi
