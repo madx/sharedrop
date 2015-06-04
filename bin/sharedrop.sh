@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source ./init.sh
+BIN_DIR=$(dirname $(realpath ${BASH_SOURCE}))
+LIB_DIR=$(realpath "${BIN_DIR}/../lib")
+
+source "${LIB_DIR}/core.sh"
 
 log_and_notify "Starting Sharedrop ($CONFIG_DIR, $DATA_DIR)"
 
