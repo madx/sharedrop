@@ -5,21 +5,21 @@ if [[ $(uname) = "Darwin" ]]; then
   OS=osx
 fi
 
-CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/sharedrop
-DATA_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/sharedrop
-LOGFILE=${LOGFILE:-$HOME/}
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/sharedrop"
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/sharedrop"
+LOGFILE="${LOGFILE:-$HOME/}"
 CONFIG_FILE="$CONFIG_DIR/config.sh"
-INDEX_FILE_NAME=${INDEX_FILE_NAME:-list.html}
-METHOD=${METHOD:-rsync}
+INDEX_FILE_NAME="${INDEX_FILE_NAME:-list.html}"
+METHOD="${METHOD:-rsync}"
 
-mkdir -p $CONFIG_DIR
-mkdir -p $DATA_DIR
+mkdir -p "$CONFIG_DIR"
+mkdir -p "$DATA_DIR"
 
 if [[ $OS == "osx" ]]; then
-  NOTIFIER=${NOTIFIER:-"notify_osx"}
+  NOTIFIER="${NOTIFIER:-"notify_osx"}"
   HASH_CMD=shasum
 else
-  NOTIFIER=${NOTIFIER:-"notify-send --icon network_fs ShareDrop"}
+  NOTIFIER="${NOTIFIER:-"notify-send --icon network_fs ShareDrop"}"
   HASH_CMD=sha1sum
 fi
 

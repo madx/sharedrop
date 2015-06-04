@@ -4,14 +4,15 @@ source ./init.sh
 
 log_and_notify "Starting Sharedrop ($CONFIG_DIR, $DATA_DIR)"
 
-if [ ! -d $CONFIG_DIR ]; then
+if [ ! -d "$CONFIG_DIR" ]; then
   log "Creating config dir ($CONFIG_DIR)"
-  mkdir -p $CONFIG_DIR
+  mkdir -p "$CONFIG_DIR"
 fi
 
-if [ ! -d $DATA_DIR ]; then
+if [ ! -d "$DATA_DIR" ]; then
   log "Creating data dir ($DATA_DIR)"
-  mkdir -p $DATA_DIR/files/thumbs # Also automatically create the files and thumbs folder
+  # Also automatically creates the files and thumbs folder
+  mkdir -p "$DATA_DIR/files/thumbs"
 fi
 
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -40,7 +41,7 @@ sync
 
 log "Watching $INBOX"
 
-fswatch -0 $INBOX | while read -d "" infile; do
+fswatch -0 "$INBOX" | while read -d "" infile; do
   if [ -f "$infile" ]; then
     ext="${infile##*.}"
     hash=$(make_hash "$infile")
