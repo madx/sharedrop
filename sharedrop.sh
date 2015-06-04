@@ -9,8 +9,8 @@ if [ ! -d "$CONFIG_DIR" ]; then
   mkdir -p "$CONFIG_DIR"
 fi
 
-if [ ! -d "$DATA_DIR" ]; then
-  log "Creating data dir ($DATA_DIR)"
+if [ ! -d "$DATA_DIR/files/thumbs" ]; then
+  log "Creating data dir tree ($DATA_DIR)"
   # Also automatically creates the files and thumbs folder
   mkdir -p "$DATA_DIR/files/thumbs"
 fi
