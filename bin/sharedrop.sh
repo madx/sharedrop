@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+# set -o xtrace
 
 BIN_DIR=$(dirname $(realpath ${BASH_SOURCE}))
 LIB_DIR=$(realpath "${BIN_DIR}/../lib")

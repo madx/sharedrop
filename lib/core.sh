@@ -70,7 +70,7 @@ build_index () {
 
   echo -n > "$INDEX_FILE"
 
-  find "$DATA_DIR/files" -mindepth 1 -printf "%f\n" |  egrep -v "$INDEX_FILE_NAME|thumbs" | while read file; do
+  find "$DATA_DIR/files" -mindepth 1 -printf "%f\n" |  egrep -v "$INDEX_FILE_NAME|thumbs" || true | while read file; do
     ext="${file##*.}"
 
     case "$ext" in
